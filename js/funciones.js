@@ -15,7 +15,6 @@ window.onload= inicializar;
         // btn.onclick= login;
 
         http.onreadystatechange= callback;
-        //http.open("GET","http://localhost:3000/materias", true);
 
         document.getElementById('btnAlta').addEventListener('click',crearFormulario);
         
@@ -80,7 +79,7 @@ window.onload= inicializar;
         if(xhr.status == 200)
         {
             document.getElementById('spinner').style.display = 'none';
-            traerPersonajes();
+            traerPersonas();
         }
         else
         {
@@ -93,63 +92,104 @@ window.onload= inicializar;
         }
     }
 
-    function crearTabla(personas) {
-        var div = document.getElementById("info");
-        var tabla = document.createElement("table");
-        //tabla.setAttribute("border", "1px");
-        div.appendChild(tabla, personas);
-        crearCabecera(tabla, personas);
-        crearCeldas(tabla, personas);
-    }
+    // function crearTabla(personas) {
+    //     var div = document.getElementById("info");
+    //     var tabla = document.createElement("table");
+    //     //tabla.setAttribute("border", "1px");
+    //     div.appendChild(tabla, personas);
+    //     crearCabecera(tabla, personas);
+    //     crearCeldas(tabla, personas);
+    // }
     
-    function crearCabecera(tabla, personas){
-        //tr= table row (fila)
-        var filaCabecera = document.createElement("tr");
-        var atributo;
-        var columna;
-        var texto;
+    // function crearCabecera(tabla, personas){
+    //     //tr= table row (fila)
+    //     var filaCabecera = document.createElement("tr");
+    //     var atributo;
+    //     var columna;
+    //     var texto;
     
-        tabla.appendChild(filaCabecera);
+    //     tabla.appendChild(filaCabecera);
     
-        for(atributo in personas[0])
-        {
-            console.log(atributo);//atributo es la clave-- usuarios[prop] devuelve el valor
+    //     for(atributo in personas[0])
+    //     {
+    //         console.log(atributo);//atributo es la clave-- usuarios[prop] devuelve el valor
     
-            columna = document.createElement("th");
-            filaCabecera.appendChild(columna);
-            texto = document.createTextNode(atributo);
-            columna.appendChild(texto);
-        }
-    }
+    //         columna = document.createElement("th");
+    //         filaCabecera.appendChild(columna);
+    //         texto = document.createTextNode(atributo);
+    //         columna.appendChild(texto);
+    //     }
+    // }
     
-    function crearCeldas(tabla, personas){
+    // function crearCeldas(tabla, personas){
     
-        for(var i = 0; i < personas.length; i++)
-        {
-            var filaNueva = document.createElement("tr");
-            var atributo;
-            var columna;
-            var texto;
-            filaNueva.addEventListener("dblclick", clickEnTabla);
-            tabla.appendChild(filaNueva);
+    //     for(var i = 0; i < personas.length; i++)
+    //     {
+    //         var filaNueva = document.createElement("tr");
+    //         var atributo;
+    //         var columna;
+    //         var texto;
+    //         filaNueva.addEventListener("dblclick", clickEnTabla);
+    //         tabla.appendChild(filaNueva);
 
-            for(atributo in personas[i])
-            {
-                columna = document.createElement("td");
-                filaNueva.appendChild(columna);
-                texto = document.createTextNode(personas[i][atributo]);
-                filaNueva.addEventListener('click',crearFormulario);
-                columna.appendChild(texto);
-            }
+    //         for(atributo in personas[i])
+    //         {
+    //             columna = document.createElement("td");
+    //             filaNueva.appendChild(columna);
+    //             texto = document.createTextNode(personas[i][atributo]);
+    //             filaNueva.addEventListener('click',crearFormulario);
+    //             columna.appendChild(texto);
+    //         }
+    //     }
+    // }
+
+    function crearHeader(tabla, lista)
+    {
+        var header = document.createElement('tr');
+        var theader = document.createElement('thead');
+        theader.id = 'theader';
+        var atributos = [];
+        for(atributo in lista[0])
+        {
+            atributos.push(atributo);
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(atributo));
+            header.appendChild(th);
         }
+        theader.appendChild(header);
+        tabla.appendChild(theader);
+        return crearBody(tabla,lista);
+
+    }
+
+    function crearBody(tabla,lista)
+    {
+        var tbody = document.createElement('tbody');
+        tbody.id = 'bodyTabla';
+        for(var i = 0; i < lista.length; i++)
+        {
+            var tr = document.createElement('tr');
+            var atributo;
+            for(atributo in lista[i])
+            {
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(atributo[i]));
+                tr.appendChild(td);
+            }
+            tr.id = 'tableRow';
+            tr.addEventListener('click',crearFormulario);
+            tbody.appendChild(tr);
+        }
+        tabla.appendChild(tbody);
+        return tabla;
     }
 
     function actualizarTabla(lista) 
     {
         var tabla = document.createElement('table');
         tabla.id = "tablaLista";
-        tabla = crearTabla(lista);
-        //document.body.appendChild(tabla);
+        tabla = crearHeader(tabla, lista);
+        document.body.appendChild(tabla);
     }
 
     function consultarFormExistente()
@@ -163,14 +203,11 @@ window.onload= inicializar;
         }
     }
 
+
     function crearFormulario()
     {
-        if(consultarFormExistente()==0)
-        {
-            return -1;
-        }
         var formulario = document.createElement('form');
-        formulario.className = 'frmAlta';
+        formulario.className = 'frm';
         var tabla = document.createElement('table');
         var header = document.getElementById('theader');
         var i = 0;
@@ -252,11 +289,11 @@ window.onload= inicializar;
                 boton.className = 'btnForm';
                 if(i == 0)
                 {
-                    boton.addEventListener('click',eliminacionPersonaje);
+                    boton.addEventListener('click',eliminacionPersona);
                 }
                 else if(i==1)
                 {
-                    boton.addEventListener('click',modificacionPersonaje);
+                    boton.addEventListener('click',modificacionPersona);
                 }
                 else
                 {
@@ -284,8 +321,8 @@ window.onload= inicializar;
 
     function agregarRadioButtons(table,caller)
     {
-        var labelValor = ["Lannister","Stark","Targaryen"];
-        var id = ["Lannister","Stark","Targaryen"]; 
+        var labelValor = ["Mañana","Tarde"];
+        var id = ["Mañana","Tarde"]; 
         var tr = document.createElement('tr');    
         for(var i = 0; i<labelValor.length;i++)
         {
@@ -296,7 +333,7 @@ window.onload= inicializar;
             var input = document.createElement('input');
             input.type = 'radio';
             input.id = id[i];
-            input.name = 'casa';
+            input.name = 'turno';
             input.className = 'inputForm';
             cargarRadioButtons(caller,input);
             tr.appendChild(input);
@@ -308,34 +345,46 @@ window.onload= inicializar;
     {
         if(caller.id == 'tableRow')
         {
-            var casa = document.getElementsByName("casa");
-            var casaseleccionada;
+            var turno = document.getElementsByName("turno");
+            var turnoseleccionado;
 
-            for(var i = 0; i < casa.length; i++) {
-            if(casa[i].checked)
-                casaseleccionada = casa[i].value;
+            for(var i = 0; i < turno.length; i++) {
+            if(turno[i].checked)
+                turnoseleccionado = turno[i].value;
             }
         }
     }
 
-    function agregarCheckbox(table,caller)
+
+    function altaPersona() 
     {
-        var tr = document.createElement('tr');    
-        var label = document.createElement('label');
-        label.className = 'labelForm';
-        label.innerText = "turno";
-        tr.appendChild(label);
-        var input = document.createElement('input');
+        var inputs = document.getElementsByClassName('inputForm');
 
-        input.setAttribute("id", "turno");
+        var turno;
 
-        input.type = 'checkbox';
-        input.id = "turno";
-        input.name = 'turno';
-        input.className = 'inputForm';
-        //cargarRadioButtons(caller,input);
-        tr.appendChild(input);
-        table.appendChild(tr);
+        if(inputs[4].checked == true)
+        {
+            turno = "Mañana";
+        }
+        else
+        {
+            turno = "Tarde";
+            
+        }
+    
+        var nuevaPersona = new Persona(inputs[1].value, inputs[2].value, inputs[3].value, turno);
+        guardarPersona(nuevaPersona);
+        removerObjetos();
+    }
+
+    function eliminacionPersona() 
+    {
+        var inputs = document.getElementsByClassName('inputForm');
+        if(confirm("¿Desea eliminar a " + inputs[1].value +", " +inputs[2].value+"?"))
+        {
+            bajaPersona(inputs[0].value);
+            removerObjetos();        
+        }
     }
 
 
@@ -381,17 +430,17 @@ window.onload= inicializar;
         console.log("Termino llamada");
     }
 
-    function eliminacionPersonaje() 
+    function eliminacionPersona() 
     {
         var inputs = document.getElementsByClassName('inputForm');
         if(confirm("¿Desea eliminar a " + inputs[1].value +", " +inputs[2].value+"?"))
         {
-            bajaPersonaje(inputs[0].value);
+            bajaPersona(inputs[0].value);
             removerObjetos();        
         }
     }
 
-    function modificacionPersonaje(persona) 
+    function modificacionPersona(persona) 
     {
         var turno = document.getElementById('turno');
 
@@ -402,20 +451,17 @@ window.onload= inicializar;
         }
 
         var casa;
-        if (document.getElementById('Stark').checked) {
-            casa = "Stark";
+        if (document.getElementById('Mañana').checked) {
+            casa = "Mañana";
         }
-        else if (document.getElementById('Targaryen').checked) {
-            casa = "Targaryen";
-        }
-        else if (document.getElementById('Lannister').checked) {
-            casa = "Lannister";
+        else if (document.getElementById('Tarde').checked) {
+            casa = "Tarde";
         }
 
         var inputs = document.getElementsByClassName('inputForm');
         var persona = new Persona(inputs[1].value,inputs[2].value,inputs[3].value,casa, turno);
         persona.id = inputs[0].value;
-        modificarPersonaje(persona);
+        modificarPersona(persona);
         removerObjetos();
     }
 
@@ -424,7 +470,6 @@ window.onload= inicializar;
         this.cuatrimestre = cuatrimestre;
         this.fechaFinal = fechaFinal;
         this.turno = turno;
-        this.active = "true";
     }
 
     function guardarPersona(persona) 
