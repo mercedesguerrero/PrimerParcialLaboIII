@@ -174,7 +174,7 @@ app.post("/nueva",function(req,res){
        console.log(req.body);
         if((req.body.id!= undefined&&req.body.id!= "") &&(req.body.nombre!= undefined&&req.body.nombre!= "") &&(req.body.cuatrimestre!= undefined&&req.body.cuatrimestre!= "") 
 			&&  (req.body.fechaFinal!= undefined&&req.body.fechaFinal!= "") && (req.body.turno!= undefined&&req.body.turno!= "")){
-	
+        console.log("Entro validado");
 			id = id +1;
        
 			

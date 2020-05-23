@@ -185,7 +185,7 @@ window.onload= inicializar;
             }
             if(header.children[0].children[i].innerText == 'cuatrimestre')
             {
-                input.type = 'text';
+                input.type = 'number';
             }
             if(header.children[0].children[i].innerText == 'fechaFinal')
             {
@@ -392,8 +392,20 @@ window.onload= inicializar;
     {
         var body=
         {
-            'objeto':persona
-        }
+            'id':45,
+            'nombre':persona.nombre,
+            'cuatrimestre':(parseInt(persona.cuatrimestre)),
+            'fechaFinal':persona.fechaFinal,
+            'turno':persona.turno
+        };
+        // var body= {
+        //     "id": 16,
+        //     "nombre": "Mate",
+        //     "cuatrimestre": 4,
+        //     "fechaFinal": "15/11/2019",
+        //     "turno": "Noche"
+        //   };
+        
         var url = "http://localhost:3000/nueva";
         xhr = new XMLHttpRequest();
         xhr.onreadystatechange = postManejador;
