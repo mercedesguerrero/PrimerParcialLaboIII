@@ -1,7 +1,7 @@
 var http= new XMLHttpRequest();
 var btnAlta;
 var divFrm;
-var frmAlta;
+var frm;
 var divInfo;
 var btnCancelar;
 
@@ -59,6 +59,7 @@ window.onload= inicializar;
             {
             document.getElementById('spinner').style.display = 'none';
             var lista = JSON.parse(xhr.responseText);
+            //console.log(lista);
             actualizarTabla(lista);
             }
             else
@@ -92,57 +93,6 @@ window.onload= inicializar;
         }
     }
 
-    // function crearTabla(personas) {
-    //     var div = document.getElementById("info");
-    //     var tabla = document.createElement("table");
-    //     //tabla.setAttribute("border", "1px");
-    //     div.appendChild(tabla, personas);
-    //     crearCabecera(tabla, personas);
-    //     crearCeldas(tabla, personas);
-    // }
-    
-    // function crearCabecera(tabla, personas){
-    //     //tr= table row (fila)
-    //     var filaCabecera = document.createElement("tr");
-    //     var atributo;
-    //     var columna;
-    //     var texto;
-    
-    //     tabla.appendChild(filaCabecera);
-    
-    //     for(atributo in personas[0])
-    //     {
-    //         console.log(atributo);//atributo es la clave-- usuarios[prop] devuelve el valor
-    
-    //         columna = document.createElement("th");
-    //         filaCabecera.appendChild(columna);
-    //         texto = document.createTextNode(atributo);
-    //         columna.appendChild(texto);
-    //     }
-    // }
-    
-    // function crearCeldas(tabla, personas){
-    
-    //     for(var i = 0; i < personas.length; i++)
-    //     {
-    //         var filaNueva = document.createElement("tr");
-    //         var atributo;
-    //         var columna;
-    //         var texto;
-    //         filaNueva.addEventListener("dblclick", clickEnTabla);
-    //         tabla.appendChild(filaNueva);
-
-    //         for(atributo in personas[i])
-    //         {
-    //             columna = document.createElement("td");
-    //             filaNueva.appendChild(columna);
-    //             texto = document.createTextNode(personas[i][atributo]);
-    //             filaNueva.addEventListener('click',crearFormulario);
-    //             columna.appendChild(texto);
-    //         }
-    //     }
-    // }
-
     function crearHeader(tabla, lista)
     {
         var header = document.createElement('tr');
@@ -173,7 +123,7 @@ window.onload= inicializar;
             for(atributo in lista[i])
             {
                 var td = document.createElement('td');
-                td.appendChild(document.createTextNode(atributo[i]));
+                td.appendChild(document.createTextNode(lista[i][atributo]));
                 tr.appendChild(td);
             }
             tr.id = 'tableRow';
@@ -196,27 +146,22 @@ window.onload= inicializar;
     {
         for(hijos of document.body.children)
         {
-            if(hijos.className == 'frmAlta')
+            if(hijos.className == 'frm')
             {
                 return 0;
             }
         }
     }
 
-
     function crearFormulario()
     {
         var formulario = document.createElement('form');
-        formulario.className = 'frm';
+        formulario.className = 'contenedor';
         var tabla = document.createElement('table');
         var header = document.getElementById('theader');
         var i = 0;
         for(i = 0; i< header.children[0].children.length; i++)
         {
-            if(header.children[0].children[i].innerText == 'nombre')
-            {
-                continue;
-            }
             var tr = document.createElement('tr');
             var label = document.createElement('label');
             label.className = 'labelForm';
@@ -234,15 +179,17 @@ window.onload= inicializar;
             {
                 input.disabled = true;
             }
+            if(header.children[0].children[i].innerText == 'nombre')
+            {
+                input.type = 'text';
+            }
+            if(header.children[0].children[i].innerText == 'cuatrimestre')
+            {
+                input.type = 'text';
+            }
             if(header.children[0].children[i].innerText == 'fechaFinal')
             {
-                input.type = 'fechaFinal';
-            }
-            if(header.children[0].children[i].innerText == 'turno')
-            {
-                input.type = 'checkbox';
-                input.id = "turno";
-                input.name = 'turno';
+                input.type = 'date';
             }
             
             var td = document.createElement('td');
@@ -390,44 +337,13 @@ window.onload= inicializar;
 
     function cerrarForm()
     {
-        document.body.removeChild(document.getElementsByClassName('frmAlta')[0]);
+        document.body.removeChild(document.getElementsByClassName('contenedor')[0]);
     }
 
     function removerObjetos()
     {
         cerrarForm();
         document.body.removeChild(document.getElementById('tablaLista'));    
-    }
-
-
-    function clickEnTabla(e){
-        console.log("Llego a click en Tabla", http.readyState);
-    
-        if(http.readyState===4 && http.status===200){
-        
-            console.log("tenemos un 200");
-
-            var trClick= e.target.parentNode;
-            var atributo;
-
-            for(atributo in personas[i])
-            {
-                trClick.childNodes[i].innerHTML;
-            }
-
-            // document.getElementById("id").value= trClick.childNodes[0].innerHTML;
-            // document.getElementById("nombre").value= trClick.childNodes[1].innerHTML;
-            // document.getElementById("apellido").value= trClick.childNodes[2].innerHTML;
-            // document.getElementById("fecha").value= trClick.childNodes[3].innerHTML;
-            //la fecha hay que parsearla al formato de la tabla 
-
-            console.log(trClick.childNodes[0].textContent);
-
-            
-        }else{
-            console.log("Tenemos un error!"); 
-        }
-        console.log("Termino llamada");
     }
 
     function eliminacionPersona() 
